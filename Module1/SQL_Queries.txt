@@ -1,0 +1,66 @@
+-- Create Customers table
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(255),
+    LastName VARCHAR(255),
+    City VARCHAR(255)
+);
+
+-- Create Products table
+CREATE TABLE Products (
+    ProductID INT PRIMARY KEY AUTO_INCREMENT,
+    ProductName VARCHAR(255),
+    Price DECIMAL(10, 2)
+);
+
+-- Create Orders table
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY AUTO_INCREMENT,
+    CustomerID INT,
+    ProductID INT,
+    OrderDate DATE,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+/////////////////////////////////////////////////////
+Data Manipulation (INSERT, UPDATE, DELETE):
+/////////////////////////////////////////////////////
+-- Insert data
+INSERT INTO Customers (FirstName, LastName, City) VALUES ('John', 'Doe', 'New York');
+INSERT INTO Products (ProductName, Price) VALUES ('Laptop', 1200.00);
+INSERT INTO Orders (CustomerID, ProductID, OrderDate) VALUES (1, 1, '2024-01-15');
+
+-- Update data
+UPDATE Customers SET City = 'Los Angeles' WHERE CustomerID = 1;
+UPDATE Products SET Price = 1300.00 WHERE ProductID = 1;
+
+-- Delete data
+DELETE FROM Orders WHERE OrderID = 1;
+DELETE FROM Customers WHERE CustomerID = 1;
+//////////////////////////////////////////////////////////
+Querying with SELECT, WHERE, LIKE, GROUP BY, HAVING, LIMIT, OFFSET, Subqueries, AND, OR, NOT, IN:
+////////////////////////////////////////////////////////////
+-- Basic SELECT with WHERE and LIKE
+SELECT * FROM Customers WHERE LastName LIKE 'D%';  -- Find customers with last name starting with 'D'
+
+-- GROUP BY, HAVING, and COUNT
+SELECT City, COUNT(*) AS CustomerCount FROM Customers GROUP BY City HAVING COUNT(*) > 1;  -- Count customers per city, showing only cities with more than 1 customer
+
+-- LIMIT and OFFSET
+SELECT * FROM Orders LIMIT 5;                -- Get first 5 orders
+SELECT * FROM Orders LIMIT 5 OFFSET 5;  -- Get orders starting from the 6th order
+
+-- Subquery in WHERE
+SELECT * FROM Customers WHERE CustomerID IN (SELECT CustomerID FROM Orders WHERE OrderDate = '2024-01-15');  -- Find customers who placed an order on a specific date
+
+-- AND, OR, NOT
+SELECT * FROM Customers WHERE (FirstName = 'John' AND LastName = 'Doe') OR (City = 'Los Angeles');  -- Find customers named John Doe or from Los Angeles
+SELECT * FROM Customers WHERE NOT City = 'New York';  -- Find customers not from New York
+
+-- Using aggregate functions in SELECT
+SELECT AVG(Price) FROM Products;  -- Get the average price of products
+
+-- Joining tables
+SELECT C.FirstName, C.LastName, P.ProductName FROM Orders O
+JOIN Customers C ON O.CustomerID = C.CustomerID
+JOIN Products P ON O.ProductID = P.ProductID;  -- Join to get order details (customer and product information)
